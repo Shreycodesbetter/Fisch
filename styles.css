@@ -1,0 +1,82 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+/* Game Canvas Styles */
+#gameCanvas {
+    border: 1px solid #000;
+    background-color: #87CEEB; /* Light blue background to represent water */
+}
+
+/* Button Styles */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #3e8e41;
+}
+
+/* Inventory and Shop Styles */
+#inventoryBtn, #shopBtn, #sellBtn, #settingsBtn {
+    margin: 10px;
+}
+
+/* Quests Styles */
+#quests {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+
+#quests ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#quests li {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+#quests li:last-child {
+    border-bottom: none;
+}
+
+/* Completed Quests Styles */
+#completed-quests {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+
+#completed-quests ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#completed-quests li {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+#completed-quests li:last-child {
+    border-bottom: none;
+}
