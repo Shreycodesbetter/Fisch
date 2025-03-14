@@ -1,82 +1,64 @@
-/* Global Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+    color: white;
+    margin: 0;
+    padding: 0;
 }
 
-/* Game Canvas Styles */
-#gameCanvas {
-    border: 1px solid #000;
-    background-color: #87CEEB; /* Light blue background to represent water */
+canvas {
+    border: 3px solid white;
+    background-color: #1E90FF;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
 }
 
-/* Button Styles */
+.controls {
+    margin-top: 20px;
+}
+
 button {
-    padding: 10px 20px;
+    padding: 12px 20px;
+    margin: 8px;
     border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: #fff;
     cursor: pointer;
+    background: #ff9800;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.2s;
 }
 
 button:hover {
-    background-color: #3e8e41;
+    background: #e68900;
+    transform: scale(1.1);
 }
 
-/* Inventory and Shop Styles */
-#inventoryBtn, #shopBtn, #sellBtn, #settingsBtn {
-    margin: 10px;
+.quest-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid white;
+    display: inline-block;
+    border-radius: 8px;
+    color: black;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Quests Styles */
-#quests {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: #fff;
-    padding: 10px;
-    border: 1px solid #000;
-    border-radius: 5px;
-}
-
-#quests ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#quests li {
-    padding: 5px;
-    border-bottom: 1px solid #ccc;
-}
-
-#quests li:last-child {
-    border-bottom: none;
-}
-
-/* Completed Quests Styles */
-#completed-quests {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #fff;
-    padding: 10px;
-    border: 1px solid #000;
-    border-radius: 5px;
-}
-
-#completed-quests ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#completed-quests li {
-    padding: 5px;
-    border-bottom: 1px solid #ccc;
-}
-
-#completed-quests li:last-child {
-    border-bottom: none;
-}
+.message-box {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
