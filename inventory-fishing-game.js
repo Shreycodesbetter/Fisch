@@ -75,8 +75,23 @@ window.onload = function() {
         setTimeout(() => messageBox.style.display = "none", 3000);
     }
 
+    canvas.addEventListener("click", (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        fishInWater.forEach((fish, index) => {
+            const dist = Math.sqrt((fish.x - mouseX) ** 2 + (fish.y - mouseY) ** 2);
+            if (dist < 10) {
+                fishCaught.push(fish);
+                fishInWater.splice(index, 1);
+                displayMessage(`Caught a ${fish.type.name}!`);
+            }
+        });
+    });
+
     document.getElementById("sellBtn").addEventListener("click", () => {
-        let totalValue = fishCaught.reduce((sum, fish) => sum + fish.type.value, 0);
+        let totalValue = fishCaught.reduce((sum, fish) => sum + fish.type.value * rodLevel, 0);
         coins += totalValue;
         fishCaught = [];
         displayMessage(`Sold all fish for ${totalValue} coins!`);
