@@ -20,6 +20,13 @@ window.onload = function() {
         { name: "Fishy Fishity Fishing Fished Fish", color: "rainbow", rarity: 1, value: 500 }
     ];
 
+    const rodTypes = [
+        "Flimsy Rod", "Training Rod", "Plastic Rod", "Carbon Rod", "Fast Rod", "Lucky Rod", "Long Rod", "Steady Rod",
+        "Nocturnal Rod", "Fortune Rod", "Rapid Rod", "Magnet Rod", "Midas Rod", "Mythical Rod", "Kings Rod", "Destiny Rod",
+        "Magma Rod", "Fungal Rod", "Haunted Rod", "Executive Rod", "Golden Rod", "Legendary Rod", "Inferno Rod", "Aqua Rod",
+        "Celestial Rod", "Thunder Rod", "Frost Rod", "Solar Rod", "Lunar Rod", "Crystal Rod", "Phantom Rod", "Diamond Rod"
+    ];
+
     let fishCaught = [];
     let fishing = false;
     let fishInWater = [];
@@ -95,6 +102,11 @@ window.onload = function() {
         } else {
             displayMessage("Invalid weather!");
         }
+    });
+
+    document.getElementById("inventoryBtn").addEventListener("click", () => {
+        const inventory = rodTypes.map((rod, index) => `${index + 1}. ${rod}`).join("\n");
+        alert(`Available Rods:\n\n${inventory}`);
     });
 
     spawnFish();
