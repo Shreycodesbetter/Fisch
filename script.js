@@ -1,87 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fishing Game</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            background: linear-gradient(to bottom, #87CEEB, #1E90FF);
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
+window.onload = function() {
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const questDisplay = document.getElementById("questDisplay");
+    const messageBox = document.getElementById("messageBox");
 
-        canvas {
-            border: 3px solid white;
-            background-color: #1E90FF;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-top: 20px;
-        }
+    const fishTypes = [
+        { name: "Flimsy Fish", color: "lightblue", rarity: 50, value: 5 },
+        { name: "Training Fish", color: "green", rarity: 45, value: 10 },
+        { name: "Plastic Fish", color: "gray", rarity: 40, value: 15 },
+        { name: "Carbon Fish", color: "black", rarity: 35, value: 20 },
+        { name: "Fast Fish", color: "red", rarity: 30, value: 25 },
+        { name: "Lucky Fish", color: "gold", rarity: 25, value: 30 },
+        { name: "Long Fish", color: "purple", rarity: 20, value: 35 },
+        { name: "Steady Fish", color: "blue", rarity: 15, value: 40 },
+        { name: "Nocturnal Fish", color: "darkblue", rarity: 10, value: 50 },
+        { name: "Fortune Fish", color: "yellow", rarity: 8, value: 55 },
+        { name: "Megalodon", color: "darkgray", rarity: 5, value: 100 },
+        { name: "The Bloop", color: "darkred", rarity: 3, value: 150 },
+        { name: "Fishy Fishity Fishing Fished Fish", color: "rainbow", rarity: 1, value: 500 }
+    ];
 
-        .controls {
-            margin-top: 20px;
-        }
+    const rodTypes = [
+        "Flimsy Rod", "Training Rod", "Plastic Rod", "Carbon Rod", "Fast Rod", "Lucky Rod", "Long Rod", "Steady Rod",
+        "Nocturnal Rod", "Fortune Rod", "Rapid Rod", "Magnet Rod", "Midas Rod", "Mythical Rod", "Kings Rod", "Destiny Rod",
+        "Magma Rod", "Fungal Rod", "Haunted Rod", "Executive Rod", "Golden Rod", "Legendary Rod", "Inferno Rod", "Aqua Rod",
+        "Celestial Rod", "Thunder Rod", "Frost Rod", "Solar Rod", "Lunar Rod", "Crystal Rod", "Phantom Rod", "Diamond Rod"
+    ];
 
-        button {
-            padding: 12px 20px;
-            margin: 8px;
-            border: none;
-            cursor: pointer;
-            background: #ff9800;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: background 0.3s, transform 0.2s;
-        }
+    let fishCaught = [];
+    let fishing = false;
+    let fishInWater = [];
+    let coins = 0;
+    let rodLevel = 1;
+    let baitType = "Basic";
+    let weather = "Sunny";
+    let quests = ["Catch 3 Rare Fish", "Earn 100 Coins", "Catch 5 Fish in Stormy Weather"];
+    let completedQuests = [];
 
-        button:hover {
-            background: #e68900;
-            transform: scale(1.1);
-        }
+    const baits = { "Basic": 1, "Advanced": 1.5, "Master": 2 };
+    const weatherEffects = { "Sunny": 1, "Rainy": 1.2, "Stormy": 0.8 };
 
-        .quest-box {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid white;
-            display: inline-block;
-            border-radius: 8px;
-            color: black;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    function spawnFish() {
+        fishInWater = [];
+        for (let i = 0; i < 5; i++) {
+            let type = fishTypes[Math.floor(Math.random() * fishTypes.length)];
+            fishInWater.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                dx: (Math.random() * 2 - 1) * 2,
+                dy: (Math.random() * 2 - 1) * 2,
+                type
+            });
         }
+    }
 
-        .message-box {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    function drawFish() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        fishInWater.forEach(fish => {
+            fish.x += fish.dx;
+            fish.y += fish.dy;
+            if (fish.x < 10 || fish.x > canvas.width - 10) fish.dx *= -1;
+            if (fish.y < 10 || fish.y > canvas.height - 10) fish.dy *= -1;
+            ctx.fillStyle = fish.type.color;
+            ctx.beginPath();
+            ctx.arc(fish.x, fish.y, 10, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        requestAnimationFrame(drawFish);
+    }
+
+    function displayMessage(msg) {
+        messageBox.innerText = msg;
+        messageBox.style.display = "block";
+        setTimeout(() => messageBox.style.display = "none", 3000);
+    }
+
+    document.getElementById("sellBtn").addEventListener("click", () => {
+        let totalValue = fishCaught.reduce((sum, fish) => sum + fish.type.value, 0);
+        coins += totalValue;
+        fishCaught = [];
+        displayMessage(`Sold all fish for ${totalValue} coins!`);
+    });
+
+    document.getElementById("shopBtn").addEventListener("click", () => {
+        let upgradeCost = rodLevel * 20;
+        if (coins >= upgradeCost) {
+            coins -= upgradeCost;
+            rodLevel++;
+            displayMessage(`Upgraded rod to level ${rodLevel}!`);
+        } else {
+            displayMessage(`Not enough coins! You need ${upgradeCost} coins.`);
         }
-    </style>
-</head>
-<body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div id="questDisplay" class="quest-box"></div>
-    <div id="messageBox" class="message-box"></div>
-    <div class="controls">
-        <button id="sellBtn">Sell Fish</button>
-        <button id="shopBtn">Upgrade Rod</button>
-        <button id="settingsBtn">Change Weather</button>
-        <button id="inventoryBtn">Inventory</button>
-    </div>
-    <script src="inventory-fishing-game.js"></script>
-</body>
-</html>
+    });
+
+    document.getElementById("settingsBtn").addEventListener("click", () => {
+        let newWeather = prompt("Change weather: Sunny, Rainy, Stormy");
+        if (weatherEffects[newWeather]) {
+            weather = newWeather;
+            displayMessage(`Weather changed to ${weather}!`);
+            spawnFish();
+        } else {
+            displayMessage("Invalid weather!");
+        }
+    });
+
+    document.getElementById("inventoryBtn").addEventListener("click", () => {
+        const inventory = rodTypes.map((rod, index) => `${index + 1}. ${rod}`).join("\n");
+        alert(`Available Rods:\n\n${inventory}`);
+    });
+
+    spawnFish();
+    drawFish();
+};
