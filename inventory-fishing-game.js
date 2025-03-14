@@ -28,7 +28,6 @@ window.onload = function() {
     ];
 
     let fishCaught = [];
-    let fishing = false;
     let fishInWater = [];
     let coins = 0;
     let rodLevel = 1;
@@ -36,6 +35,9 @@ window.onload = function() {
     let weather = "Sunny";
     let quests = ["Catch 3 Rare Fish", "Earn 100 Coins", "Catch 5 Fish in Stormy Weather"];
     let completedQuests = [];
+    let xp = 0;
+    let level = 1;
+    let achievements = [];
 
     const baits = { "Basic": 1, "Advanced": 1.5, "Master": 2 };
     const weatherEffects = { "Sunny": 1, "Rainy": 1.2, "Stormy": 0.8 };
@@ -44,12 +46,15 @@ window.onload = function() {
         fishInWater = [];
         for (let i = 0; i < 5; i++) {
             let type = fishTypes[Math.floor(Math.random() * fishTypes.length)];
+            let size = Math.random() * 2 + 0.5; // Fish size between 0.5 and 2.5
             fishInWater.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
                 dx: (Math.random() * 2 - 1) * 2,
                 dy: (Math.random() * 2 - 1) * 2,
-                type
+                type,
+                size,
+                caught: false
             });
         }
     }
@@ -61,9 +66,9 @@ window.onload = function() {
             fish.y += fish.dy;
             if (fish.x < 10 || fish.x > canvas.width - 10) fish.dx *= -1;
             if (fish.y < 10 || fish.y > canvas.height - 10) fish.dy *= -1;
-            ctx.fillStyle = fish.type.color;
+            ctx.fillStyle = fish.caught ? "white" : fish.type.color;
             ctx.beginPath();
-            ctx.arc(fish.x, fish.y, 10, 0, Math.PI * 2);
+            ctx.arc(fish.x, fish.y, 10 * fish.size, 0, Math.PI * 2);
             ctx.fill();
         });
         requestAnimationFrame(drawFish);
@@ -75,6 +80,26 @@ window.onload = function() {
         setTimeout(() => messageBox.style.display = "none", 3000);
     }
 
+    function addXp(amount) {
+        xp += amount;
+        if (xp >= level * 100) {
+            xp -= level * 100;
+            level++;
+            displayMessage(`Leveled up to level ${level}!`);
+        }
+    }
+
+    function checkAchievements() {
+        if (coins >= 1000 && !achievements.includes("Wealthy Angler")) {
+            achievements.push("Wealthy Angler");
+            displayMessage("Achievement unlocked: Wealthy Angler!");
+        }
+        if (fishCaught.length >= 100 && !achievements.includes("Master Fisherman")) {
+            achievements.push("Master Fisherman");
+            displayMessage("Achievement unlocked: Master Fisherman!");
+        }
+    }
+
     canvas.addEventListener("click", (e) => {
         const rect = canvas.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
@@ -82,19 +107,22 @@ window.onload = function() {
 
         fishInWater.forEach((fish, index) => {
             const dist = Math.sqrt((fish.x - mouseX) ** 2 + (fish.y - mouseY) ** 2);
-            if (dist < 10) {
+            if (dist < 10 * fish.size && !fish.caught) {
+                fish.caught = true;
                 fishCaught.push(fish);
-                fishInWater.splice(index, 1);
-                displayMessage(`Caught a ${fish.type.name}!`);
+                displayMessage(`Caught a ${fish.type.name} of size ${fish.size.toFixed(2)}!`);
+                addXp(Math.floor(fish.size * 10));
+                setTimeout(() => fishInWater.splice(index, 1), 500);
             }
         });
     });
 
     document.getElementById("sellBtn").addEventListener("click", () => {
-        let totalValue = fishCaught.reduce((sum, fish) => sum + fish.type.value * rodLevel, 0);
+        let totalValue = fishCaught.reduce((sum, fish) => sum + fish.type.value * fish.size * rodLevel, 0);
         coins += totalValue;
         fishCaught = [];
-        displayMessage(`Sold all fish for ${totalValue} coins!`);
+        displayMessage(`Sold all fish for ${totalValue.toFixed(2)} coins!`);
+        checkAchievements();
     });
 
     document.getElementById("shopBtn").addEventListener("click", () => {
@@ -120,8 +148,8 @@ window.onload = function() {
     });
 
     document.getElementById("inventoryBtn").addEventListener("click", () => {
-        const inventory = rodTypes.map((rod, index) => `${index + 1}. ${rod}`).join("\n");
-        alert(`Available Rods:\n\n${inventory}`);
+        const inventory = fishCaught.map((fish, index) => `${index + 1}. ${fish.type.name} (Size: ${fish.size.toFixed(2)})`).join("\n");
+        alert(`Inventory:\n\n${inventory}`);
     });
 
     spawnFish();
