@@ -1,18 +1,21 @@
-<button id="inventoryBtn">Open Inventory</button>
-<button id="shopBtn">Open Shop</button>
-<button id="sellBtn">Sell Fish</button>
-<button id="settingsBtn">Open Settings</button>
-
-<div id="quests">
-    <h2>Quests:</h2>
-    <ul>
-        <li>Catch 3 Rare Fish</li>
-        <li>Earn 100 Coins</li>
-        <li>Catch 5 Fish in Stormy Weather</li>
-    </ul>
-</div>
-
-<div id="completed-quests">
-    <h2>Completed Quests:</h2>
-    <ul id="completed-quests-list"></ul>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fishing Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Fishing Game 🎣</h1>
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <div class="controls">
+        <button id="sellBtn">Sell Fish</button>
+        <button id="shopBtn">Upgrade Rod</button>
+        <button id="settingsBtn">Settings</button>
+    </div>
+    <div id="questDisplay" class="quest-box"></div>
+    <div id="messageBox" class="message-box"></div>
+    <script src="script.js"></script>
+</body>
+</html>
