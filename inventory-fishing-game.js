@@ -65,7 +65,8 @@ window.onload = function() {
                 dy: (Math.random() * 2 - 1) * 2,
                 type,
                 size,
-                caught: false
+                caught: false,
+                tailSwish: Math.random() * Math.PI
             });
         }
     }
@@ -77,10 +78,26 @@ window.onload = function() {
             fish.y += fish.dy;
             if (fish.x < 10 || fish.x > canvas.width - 10) fish.dx *= -1;
             if (fish.y < 10 || fish.y > canvas.height - 10) fish.dy *= -1;
+
             ctx.fillStyle = fish.caught ? "white" : fish.type.color;
             ctx.beginPath();
             ctx.arc(fish.x, fish.y, 10 * fish.size, 0, Math.PI * 2);
             ctx.fill();
+
+            // Draw tail
+            ctx.fillStyle = fish.caught ? "white" : fish.type.color;
+            ctx.beginPath();
+            ctx.moveTo(fish.x, fish.y);
+            const tailLength = 10 * fish.size;
+            const tailWidth = 5 * fish.size;
+            const tailX = fish.x - tailLength * Math.cos(fish.tailSwish);
+            const tailY = fish.y - tailLength * Math.sin(fish.tailSwish);
+            ctx.lineTo(tailX - tailWidth, tailY - tailWidth);
+            ctx.lineTo(tailX + tailWidth, tailY + tailWidth);
+            ctx.closePath();
+            ctx.fill();
+
+            fish.tailSwish += 0.1;
         });
         if (fishInWater.length <= 2) {
             spawnFish();
