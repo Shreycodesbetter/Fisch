@@ -42,6 +42,17 @@ window.onload = function() {
     const baits = { "Basic": 1, "Advanced": 1.5, "Master": 2 };
     const weatherEffects = { "Sunny": 1, "Rainy": 1.2, "Stormy": 0.8 };
 
+    function getRandomWeather() {
+        const weatherTypes = Object.keys(weatherEffects);
+        return weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
+    }
+
+    function changeWeather() {
+        weather = getRandomWeather();
+        displayMessage(`Weather changed to ${weather}!`);
+        spawnFish();
+    }
+
     function spawnFish() {
         fishInWater = [];
         for (let i = 0; i < 5; i++) {
@@ -71,6 +82,9 @@ window.onload = function() {
             ctx.arc(fish.x, fish.y, 10 * fish.size, 0, Math.PI * 2);
             ctx.fill();
         });
+        if (fishInWater.length <= 2) {
+            spawnFish();
+        }
         requestAnimationFrame(drawFish);
     }
 
@@ -151,6 +165,8 @@ window.onload = function() {
         const inventory = fishCaught.map((fish, index) => `${index + 1}. ${fish.type.name} (Size: ${fish.size.toFixed(2)})`).join("\n");
         alert(`Inventory:\n\n${inventory}`);
     });
+
+    setInterval(changeWeather, 120000); // Change weather every 2 minutes
 
     spawnFish();
     drawFish();
