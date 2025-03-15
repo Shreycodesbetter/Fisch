@@ -50,11 +50,9 @@ window.onload = function() {
     function changeWeather() {
         weather = getRandomWeather();
         displayMessage(`Weather changed to ${weather}!`);
-        spawnFish();
     }
 
-    function spawnFish() {
-        fishInWater = [];
+    function spawnMoreFish() {
         for (let i = 0; i < 5; i++) {
             let type = fishTypes[Math.floor(Math.random() * fishTypes.length)];
             let size = Math.random() * 2 + 0.5; // Fish size between 0.5 and 2.5
@@ -69,6 +67,11 @@ window.onload = function() {
                 tailSwish: Math.random() * Math.PI
             });
         }
+    }
+
+    function spawnInitialFish() {
+        fishInWater = [];
+        spawnMoreFish();
     }
 
     function drawFish() {
@@ -100,7 +103,7 @@ window.onload = function() {
             fish.tailSwish += 0.1;
         });
         if (fishInWater.length <= 2) {
-            spawnFish();
+            spawnMoreFish();
         }
         requestAnimationFrame(drawFish);
     }
@@ -172,7 +175,6 @@ window.onload = function() {
         if (weatherEffects[newWeather]) {
             weather = newWeather;
             displayMessage(`Weather changed to ${weather}!`);
-            spawnFish();
         } else {
             displayMessage("Invalid weather!");
         }
@@ -185,6 +187,6 @@ window.onload = function() {
 
     setInterval(changeWeather, 120000); // Change weather every 2 minutes
 
-    spawnFish();
+    spawnInitialFish();
     drawFish();
 };
